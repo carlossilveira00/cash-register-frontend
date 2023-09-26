@@ -90,9 +90,32 @@ const FreeItems = styled.div`
   font-weight: bold;
 `;
 
+const CheckoutButton = styled.button`
+  background-color: #5C8EF1;
+  color: white;
+  border: none;
+  padding: 12px 0;
+  border-radius: 4px;
+  margin-top: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  width: 100%;
+`;
+
+const TotalValue = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 16px;
+  font-weight: bold;
+  font-size: 18px;
+  /* text-align: right; */
+  text-align: center;
+`;
+
 export default function Cart() {
   return (
-    <CartContainer data-testid='Cart'>
+    <CartContainer data-testid='Cart' onClick={(e) => e.stopPropagation()}>
       <ArrowUp></ArrowUp>
       <CartItemsContainer>
         <CartItem>
@@ -152,6 +175,11 @@ export default function Cart() {
             </ItemQuantity>
           </ItemDetails>
         </CartItem>
+        <TotalValue>
+          <span style={{fontWeight:'800'}}>Total:</span>
+          <span>30$</span>
+        </TotalValue>
+        <CheckoutButton>Checkout</CheckoutButton>
       </CartItemsContainer>
     </CartContainer>
   );
