@@ -78,6 +78,16 @@ export function CartProvider({ children }) {
     }));
   };
 
+  const deleteItemFromCart = (cartItem) => {
+    // Filter cart to not include the item you want to delete.
+    const updatedCartItems = cart.cart_items.filter((item) => item.product_id !== cartItem.product_id)
+    // Update the cart state.
+    setCart((prevCart) => ({
+      ...prevCart,
+      cart_items: updatedCartItems,
+    }));
+  };
+
   const decreaseCartItemQuantity = (cartItem) => {
     const updatedCartItems = cart.cart_items.map((item) => {
       // If its the correct item.
@@ -119,7 +129,7 @@ export function CartProvider({ children }) {
   }, [cart.cart_id]);
 
   return (
-    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity, decreaseCartItemQuantity}}>
+    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity, decreaseCartItemQuantity, deleteItemFromCart}}>
       {children}
     </CartContext.Provider>
   );

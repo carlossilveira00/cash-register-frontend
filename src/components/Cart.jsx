@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useCart } from '../context/CartContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const ArrowUp = styled.div`
   width: 0;
@@ -156,6 +158,7 @@ export default function Cart() {
                   }
                 </ItemQuantity>
               </ItemDetails>
+              <FontAwesomeIcon icon={faTrash} style={{marginLeft:'10px', color: '#FF6B6B'}} onClick={() => cart.deleteItemFromCart(item)} />
             </CartItem>
             )
           })
