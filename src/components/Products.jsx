@@ -110,8 +110,7 @@ const PromotionBox = styled.div`
 export default function Products() {
   const products = useProdcuts();
   const promotions = usePromotons();
-  console.log(products)
-  console.log(promotions)
+
   const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => {
@@ -130,17 +129,24 @@ export default function Products() {
       <ProductsContainer>
         {
           products.map((product) => {
+            // Find if there's any promotion for this product
+            let promotion = promotions.find((promo) => promo.product_code === product.code)
+
             return(
               <ProductCard data-testid='ProductCard'>
-              <PromotionBox>
-                <p style={{margin: '0',marginBottom:'8px', textDecoration:'underline', fontWeight:'200'}}>Special Promotion:</p>
-                <span style={{fontWeight:'600'}}>Buy 3 or more and get 70 off!!</span>
-              </PromotionBox>
-              <ProductImage data-testid='ProductImage' src='https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80' alt="Product" />
+                {
+                // If there is a promotion that pass the promotion details and create a promotion box on this product.
+                promotion &&
+                  <PromotionBox>
+                    <p style={{margin: '0',marginBottom:'8px', textDecoration:'underline', fontWeight:'200'}}>Special Promotion:</p>
+                    <span style={{fontWeight:'600'}}>{promotion.title}</span>
+                </PromotionBox>
+                }
+              <ProductImage data-testid='ProductImage' src={product.image_url} alt="Product" />
               <ProductInfo>
-                <h4 data-testid='ProductTitle'>Product Title</h4>
-                <p data-testid='ProductCode'>Product Code: ABC123</p>
-                <ProductPrice data-testid='ProductPrice'>$11.23</ProductPrice>
+                <h4 data-testid='ProductTitle'>{product.name}</h4>
+                <p data-testid='ProductCode'>Product Code: {product.code}</p>
+                <ProductPrice data-testid='ProductPrice'>{product.price}$</ProductPrice>
                 <QuantityControl>
                   <QuantityLabel>Quantity:</QuantityLabel>
                   <QuantityButton onClick={decreaseQuantity} data-testid='DecreaseButton'>-</QuantityButton>
@@ -153,25 +159,6 @@ export default function Products() {
             )
           })
         }
-        {/* <ProductCard data-testid='ProductCard'>
-          <PromotionBox>
-            <p style={{margin: '0',marginBottom:'8px', textDecoration:'underline', fontWeight:'200'}}>Special Promotion:</p>
-            <span style={{fontWeight:'600'}}>Buy 3 or more and get 70 off!!</span>
-          </PromotionBox>
-          <ProductImage data-testid='ProductImage' src='https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80' alt="Product" />
-          <ProductInfo>
-            <h4 data-testid='ProductTitle'>Product Title</h4>
-            <p data-testid='ProductCode'>Product Code: ABC123</p>
-            <ProductPrice data-testid='ProductPrice'>$11.23</ProductPrice>
-            <QuantityControl>
-              <QuantityLabel>Quantity:</QuantityLabel>
-              <QuantityButton onClick={decreaseQuantity} data-testid='DecreaseButton'>-</QuantityButton>
-                <span style={{margin: '0px 5px'}} data-testid='ProductQuantity'>{quantity}</span>
-              <QuantityButton onClick={increaseQuantity} data-testid='IncreaseButton'>+</QuantityButton>
-            </QuantityControl>
-            <AddToCartButton>Add to Cart</AddToCartButton>
-          </ProductInfo>
-        </ProductCard> */}
       </ProductsContainer>
     </ProductsWrapper>
   )
