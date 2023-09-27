@@ -57,10 +57,16 @@ const ItemQuantity = styled.div`
   justify-content: flex-end;
 `;
 
+// If the item doesnt have discounted price, apply only the bold style.
 const OldPrice = styled.span`
-  text-decoration: line-through;
-  margin-right: 10px;
-  color: #888;
+  ${props =>
+    props.hasDiscountedPrice
+      ? `
+      text-decoration: line-through;
+      margin-right: 10px;
+      color: #888;
+    `
+      : 'font-weight: bold'};
 `;
 
 const TotalPrice = styled.span`
@@ -125,84 +131,36 @@ export default function Cart() {
           cart.cart.cart_items.map((item) => {
             return(
             <CartItem>
-              <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
+              <ItemImage src={item.product_image} alt={item.product_name} />
               <ItemDetails>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-                  <ItemName>Strawberries</ItemName>
+                  <ItemName>{item.product_name}</ItemName>
                   <span style={{ fontWeight: '800' }}>-</span>
-                  <OldPrice>6.12$</OldPrice>
-                  <TotalPrice>3.11$</TotalPrice>
+                  <OldPrice hasDiscountedPrice={item.discounted_price > 0}>{item.undiscounted_price}$</OldPrice>
+                  {
+                    // If items has discounted price present it.
+                    item.discounted_price > 0 &&
+                    <TotalPrice>{item.discounted_price}$</TotalPrice>
+                  }
+
                 </div>
                 <ItemQuantity>
                   <QuantityControl>
                     <QuantityButton>-</QuantityButton>
-                    <span>1</span>
+                    <span>{item.quantity}</span>
                     <QuantityButton>+</QuantityButton>
                   </QuantityControl>
-                  <FreeItems>+1 free</FreeItems>
+                  {
+                    // If items has free quantity present it.
+                    item.promotion_free_quantity >= 1 &&
+                    <FreeItems>+{item.promotion_free_quantity} free</FreeItems>
+                  }
                 </ItemQuantity>
               </ItemDetails>
             </CartItem>
             )
           })
         }
-        {/* <CartItem>
-          <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
-          <ItemDetails>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-              <ItemName>Strawberries</ItemName>
-              <span style={{ fontWeight: '800' }}>-</span>
-              <OldPrice>6.12$</OldPrice>
-              <TotalPrice>3.11$</TotalPrice>
-            </div>
-            <ItemQuantity>
-              <QuantityControl>
-                <QuantityButton>-</QuantityButton>
-                <span>1</span>
-                <QuantityButton>+</QuantityButton>
-              </QuantityControl>
-              <FreeItems>+1 free</FreeItems>
-            </ItemQuantity>
-          </ItemDetails>
-        </CartItem>
-        <CartItem>
-          <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
-          <ItemDetails>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-              <ItemName>Strawberries</ItemName>
-              <span style={{ fontWeight: '800' }}>-</span>
-              <OldPrice>6.12$</OldPrice>
-              <TotalPrice>3.11$</TotalPrice>
-            </div>
-            <ItemQuantity>
-              <QuantityControl>
-                <QuantityButton>-</QuantityButton>
-                <span>1</span>
-                <QuantityButton>+</QuantityButton>
-              </QuantityControl>
-              <FreeItems>+1 free</FreeItems>
-            </ItemQuantity>
-          </ItemDetails>
-        </CartItem>
-        <CartItem>
-          <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
-          <ItemDetails>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
-              <ItemName>Strawberries</ItemName>
-              <span style={{ fontWeight: '800' }}>-</span>
-              <OldPrice>6.12$</OldPrice>
-              <TotalPrice>3.11$</TotalPrice>
-            </div>
-            <ItemQuantity>
-              <QuantityControl>
-                <QuantityButton>-</QuantityButton>
-                <span>1</span>
-                <QuantityButton>+</QuantityButton>
-              </QuantityControl>
-              <FreeItems>+1 free</FreeItems>
-            </ItemQuantity>
-          </ItemDetails>
-        </CartItem> */}
         <TotalValue>
           <span style={{fontWeight:'800'}}>Total:</span>
           <span>{cart.total}$</span>
