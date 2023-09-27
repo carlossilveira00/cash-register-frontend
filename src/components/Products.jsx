@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { useProdcuts } from '../context/ProductsContext';
 
 const ProductsWrapper = styled.div`
   width: 100%;
@@ -106,6 +107,8 @@ const PromotionBox = styled.div`
 
 
 export default function Products() {
+  const products = useProdcuts();
+  console.log(products)
   const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => {
@@ -122,7 +125,32 @@ export default function Products() {
     <ProductsWrapper data-testid='ProductsWrapper'>
       <ProductsTitle data-testid='Title'>Products</ProductsTitle>
       <ProductsContainer>
-        <ProductCard data-testid='ProductCard'>
+        {
+          products.map((product) => {
+            return(
+              <ProductCard data-testid='ProductCard'>
+              <PromotionBox>
+                <p style={{margin: '0',marginBottom:'8px', textDecoration:'underline', fontWeight:'200'}}>Special Promotion:</p>
+                <span style={{fontWeight:'600'}}>Buy 3 or more and get 70 off!!</span>
+              </PromotionBox>
+              <ProductImage data-testid='ProductImage' src='https://images.unsplash.com/photo-1512568400610-62da28bc8a13?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3087&q=80' alt="Product" />
+              <ProductInfo>
+                <h4 data-testid='ProductTitle'>Product Title</h4>
+                <p data-testid='ProductCode'>Product Code: ABC123</p>
+                <ProductPrice data-testid='ProductPrice'>$11.23</ProductPrice>
+                <QuantityControl>
+                  <QuantityLabel>Quantity:</QuantityLabel>
+                  <QuantityButton onClick={decreaseQuantity} data-testid='DecreaseButton'>-</QuantityButton>
+                    <span style={{margin: '0px 5px'}} data-testid='ProductQuantity'>{quantity}</span>
+                  <QuantityButton onClick={increaseQuantity} data-testid='IncreaseButton'>+</QuantityButton>
+                </QuantityControl>
+                <AddToCartButton>Add to Cart</AddToCartButton>
+              </ProductInfo>
+            </ProductCard>
+            )
+          })
+        }
+        {/* <ProductCard data-testid='ProductCard'>
           <PromotionBox>
             <p style={{margin: '0',marginBottom:'8px', textDecoration:'underline', fontWeight:'200'}}>Special Promotion:</p>
             <span style={{fontWeight:'600'}}>Buy 3 or more and get 70 off!!</span>
@@ -140,7 +168,7 @@ export default function Products() {
             </QuantityControl>
             <AddToCartButton>Add to Cart</AddToCartButton>
           </ProductInfo>
-        </ProductCard>
+        </ProductCard> */}
       </ProductsContainer>
     </ProductsWrapper>
   )
