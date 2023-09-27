@@ -7,7 +7,7 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState({cart_id: null, total:10, cart_items:[{product_id:1}]});
+  const [cart, setCart] = useState({cart_id: null, total:10, cart_items:[]});
   const cartApiUrl = 'https://carts1.free.beeceptor.com/carts';
 
   const addItemToCart = (cartItem) => {
@@ -36,6 +36,8 @@ export function CartProvider({ children }) {
       const newCartItems = [...cart.cart_items, {
             cart_id: cart.cart_id,
             product_id: cartItem.product.id,
+            product_image: cartItem.product.image_url,
+            product_name: cartItem.product.name,
             quantity: cartItem.quantity,
             undiscounted_price: (cartItem.product.price * cartItem.quantity),
             discounted_price: null,

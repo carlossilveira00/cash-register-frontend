@@ -116,11 +116,37 @@ const TotalValue = styled.div`
 
 export default function Cart() {
   const cart = useCart();
+  console.log(cart.cart.cart_items)
   return (
     <CartContainer data-testid='Cart' onClick={(e) => e.stopPropagation()}>
       <ArrowUp></ArrowUp>
       <CartItemsContainer>
-        <CartItem>
+        {
+          cart.cart.cart_items.map((item) => {
+            return(
+            <CartItem>
+              <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
+              <ItemDetails>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
+                  <ItemName>Strawberries</ItemName>
+                  <span style={{ fontWeight: '800' }}>-</span>
+                  <OldPrice>6.12$</OldPrice>
+                  <TotalPrice>3.11$</TotalPrice>
+                </div>
+                <ItemQuantity>
+                  <QuantityControl>
+                    <QuantityButton>-</QuantityButton>
+                    <span>1</span>
+                    <QuantityButton>+</QuantityButton>
+                  </QuantityControl>
+                  <FreeItems>+1 free</FreeItems>
+                </ItemQuantity>
+              </ItemDetails>
+            </CartItem>
+            )
+          })
+        }
+        {/* <CartItem>
           <ItemImage src="https://images.unsplash.com/photo-1601004890684-d8cbf643f5f2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2030&q=80" alt="" />
           <ItemDetails>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
@@ -176,7 +202,7 @@ export default function Cart() {
               <FreeItems>+1 free</FreeItems>
             </ItemQuantity>
           </ItemDetails>
-        </CartItem>
+        </CartItem> */}
         <TotalValue>
           <span style={{fontWeight:'800'}}>Total:</span>
           <span>{cart.total}$</span>
