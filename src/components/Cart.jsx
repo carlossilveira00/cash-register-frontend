@@ -145,7 +145,7 @@ export default function Cart() {
                 </div>
                 <ItemQuantity>
                   <QuantityControl>
-                    <QuantityButton>-</QuantityButton>
+                    <QuantityButton onClick={() => cart.decreaseCartItemQuantity(item)}>-</QuantityButton>
                     <span>{item.quantity}</span>
                     <QuantityButton onClick={() => cart.increaseCartItemQuantity(item)}>+</QuantityButton>
                   </QuantityControl>

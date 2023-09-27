@@ -78,6 +78,35 @@ export function CartProvider({ children }) {
     }));
   };
 
+  const decreaseCartItemQuantity = (cartItem) => {
+    const updatedCartItems = cart.cart_items.map((item) => {
+      // If its the correct item.
+      if (item.product_id === cartItem.product_id) {
+        // Decrease the quantity of the matching item by 1.
+        const updatedQuantity = item.quantity - 1
+        // If the quantity is equal to 0 return null
+        if (updatedQuantity === 0) {
+          return null
+        }
+
+        return {
+          ...item,
+          quantity: updatedQuantity,
+          undiscounted_price: (cartItem.product_price * updatedQuantity)
+        };
+      }
+      // If its not the correct item then keep it unchanged.
+      return item;
+      // Filter by Boolean values, this way the item you returned null will be left out of the cart_items
+    }).filter(Boolean);
+
+  // Update the cart state.
+  setCart((prevCart) => ({
+    ...prevCart,
+    cart_items: updatedCartItems,
+  }));
+};
+
   useEffect(() => {
     // Fetch cart from the API when the component mounts. If there's already an cart_id no need to fetch it again.
     if (cart.cart_id == null) {
@@ -90,7 +119,7 @@ export function CartProvider({ children }) {
   }, [cart.cart_id]);
 
   return (
-    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity}}>
+    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity, decreaseCartItemQuantity}}>
       {children}
     </CartContext.Provider>
   );
