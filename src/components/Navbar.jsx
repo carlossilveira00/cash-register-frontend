@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Cart_Icon from '../assets/CartIcon.png'
 import Cart from './Cart'
+import { useCart } from '../context/CartContext';
 
 const StyledNavbar = styled.div`
   display: grid;
@@ -38,6 +39,8 @@ const CartImage = styled.img`
 `;
 
 export default function Navbar() {
+  const cart = useCart();
+  console.log(cart)
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const toggleCart = () => {
@@ -51,7 +54,7 @@ export default function Navbar() {
       </LogoContainer>
       <CartIcon data-testid='CartIcon' onClick={toggleCart}>
         <CartImage src={Cart_Icon} alt="Cart" data-testid='CartImage'></CartImage>
-        {isCartOpen && <Cart/>}
+        {isCartOpen && <Cart cart={cart}/>}
       </CartIcon>
     </StyledNavbar>
   )

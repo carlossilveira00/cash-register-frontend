@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useCart } from '../context/CartContext';
 
 const ArrowUp = styled.div`
   width: 0;
@@ -114,6 +115,7 @@ const TotalValue = styled.div`
 `;
 
 export default function Cart() {
+  const cart = useCart();
   return (
     <CartContainer data-testid='Cart' onClick={(e) => e.stopPropagation()}>
       <ArrowUp></ArrowUp>
@@ -177,7 +179,7 @@ export default function Cart() {
         </CartItem>
         <TotalValue>
           <span style={{fontWeight:'800'}}>Total:</span>
-          <span>30$</span>
+          <span>{cart.total}$</span>
         </TotalValue>
         <CheckoutButton>Checkout</CheckoutButton>
       </CartItemsContainer>
