@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useProdcuts } from '../context/ProductsContext';
+import { usePromotons } from '../context/PromotionsContext';
 
 const ProductsWrapper = styled.div`
   width: 100%;
@@ -108,7 +109,9 @@ const PromotionBox = styled.div`
 
 export default function Products() {
   const products = useProdcuts();
+  const promotions = usePromotons();
   console.log(products)
+  console.log(promotions)
   const [quantity, setQuantity] = useState(1);
 
   const increaseQuantity = () => {
