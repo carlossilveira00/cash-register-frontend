@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { useProdcuts } from '../context/ProductsContext';
 import { usePromotons } from '../context/PromotionsContext';
+import { useCart } from '../context/CartContext';
 
 const ProductsWrapper = styled.div`
   width: 100%;
@@ -109,6 +110,7 @@ const PromotionBox = styled.div`
 
 export default function Products() {
   const products = useProdcuts();
+  const cart = useCart();
   const promotions = usePromotons();
 
   const [quantity, setQuantity] = useState(1);
@@ -117,7 +119,7 @@ export default function Products() {
     setQuantity(quantity + 1);
   };
 
-  const decreaseQuantity = () => {
+  const decreaseQuantity = (e) => {
     if (quantity > 1) {
       setQuantity(quantity - 1);
     }
@@ -153,7 +155,7 @@ export default function Products() {
                     <span style={{margin: '0px 5px'}} data-testid='ProductQuantity'>{quantity}</span>
                   <QuantityButton onClick={increaseQuantity} data-testid='IncreaseButton'>+</QuantityButton>
                 </QuantityControl>
-                <AddToCartButton>Add to Cart</AddToCartButton>
+                <AddToCartButton onClick={() => cart.addItemToCart({product, quantity, promotion})} >Add to Cart</AddToCartButton>
               </ProductInfo>
             </ProductCard>
             )

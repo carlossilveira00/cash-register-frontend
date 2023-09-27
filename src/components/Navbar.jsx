@@ -40,7 +40,6 @@ const CartImage = styled.img`
 
 export default function Navbar() {
   const cart = useCart();
-  console.log(cart)
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   const toggleCart = () => {
