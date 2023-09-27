@@ -95,7 +95,7 @@ const CheckoutButton = styled.button`
   color: white;
   border: none;
   padding: 12px 0;
-  border-radius: 4px;
+  border-radius: 20px;
   margin-top: 16px;
   cursor: pointer;
   font-weight: bold;
