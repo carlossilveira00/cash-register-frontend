@@ -116,13 +116,12 @@ const TotalValue = styled.div`
   margin-top: 16px;
   font-weight: bold;
   font-size: 18px;
-  /* text-align: right; */
   text-align: center;
 `;
 
 export default function Cart() {
   const cart = useCart();
-  console.log(cart.cart.cart_items)
+
   return (
     <CartContainer data-testid='Cart' onClick={(e) => e.stopPropagation()}>
       <ArrowUp></ArrowUp>
@@ -148,7 +147,7 @@ export default function Cart() {
                   <QuantityControl>
                     <QuantityButton>-</QuantityButton>
                     <span>{item.quantity}</span>
-                    <QuantityButton>+</QuantityButton>
+                    <QuantityButton onClick={() => cart.increaseCartItemQuantity(item)}>+</QuantityButton>
                   </QuantityControl>
                   {
                     // If items has free quantity present it.
