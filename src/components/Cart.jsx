@@ -153,8 +153,8 @@ export default function Cart() {
                   </QuantityControl>
                   {
                     // If items has free quantity present it.
-                    item.promotion_free_quantity >= 1 &&
-                    <FreeItems>+{item.promotion_free_quantity} free</FreeItems>
+                    item.free_quantity >= 1 &&
+                    <FreeItems>+{item.free_quantity} free</FreeItems>
                   }
                 </ItemQuantity>
               </ItemDetails>

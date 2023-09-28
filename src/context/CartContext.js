@@ -57,7 +57,9 @@ export function CartProvider({ children }) {
         ...item,
         cart_id: 1,
         undiscounted_price: item.quantity * item.product_price,
-        discounted_price : item.quantity * promotion.discount
+        discounted_price : item.quantity * promotion.discount,
+        promotion_id: promotion.id,
+        promotion_status: 'applied'
       }
     } else {
       return{
@@ -76,7 +78,9 @@ export function CartProvider({ children }) {
         ...item,
         cart_id: 1,
         undiscounted_price: item.quantity * item.product_price,
-        discounted_price : (item.quantity * item.product_price * discount).toFixed(2)
+        discounted_price : (item.quantity * item.product_price * discount).toFixed(2),
+        promotion_id: promotion.id,
+        promotion_status: 'applied'
       }
     } else {
       return{
