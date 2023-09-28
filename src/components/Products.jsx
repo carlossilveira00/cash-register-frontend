@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { useProdcuts } from '../context/ProductsContext';
-import { usePromotons } from '../context/PromotionsContext';
+import { usePromotions } from '../context/PromotionsContext';
 import { useCart } from '../context/CartContext';
 import ProductCard from './ProductCard';
 
@@ -32,7 +32,7 @@ const ProductsContainer = styled.div`
 export default function Products() {
   const products = useProdcuts();
   const cart = useCart();
-  const promotions = usePromotons();
+  const promotions = usePromotions();
 
   return (
     <ProductsWrapper data-testid='ProductsWrapper'>

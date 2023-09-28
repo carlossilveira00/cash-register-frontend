@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { usePromotons } from "./PromotionsContext";
+import { usePromotions } from "./PromotionsContext";
 
 const CartContext = createContext();
 
@@ -8,9 +8,9 @@ export function useCart() {
 }
 
 export function CartProvider({ children }) {
-  const [cart, setCart] = useState({cart_id: null, total:10, cart_items:[]});
-  const promotions = usePromotons();
-  const cartApiUrl = 'https://carts1.free.beeceptor.com/carts';
+  const [cart, setCart] = useState({cart_id: null, total:0, cart_items:[]});
+  const promotions = usePromotions();
+  const cartApiUrl = 'http://127.0.0.1:3000/cart/checkout';
 
   const updateCartTotal = () => {
     const updatedTotal = cart.cart_items.reduce((total,cart_item)=>{
@@ -23,6 +23,24 @@ export function CartProvider({ children }) {
       ...prevCart,
       total: updatedTotal.toFixed(2)
     }));
+  };
+
+  const handleCheckout = async () => {
+    const response = await fetch(cartApiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({cart: cart}),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        window.alert(responseData.message)
+        setCart({cart_id: null, total:0, cart_items:[]})
+      } else {
+        window.alert(response.json().message)
+      }
   };
 
   const addItemToCart = (cartItem) => {
@@ -126,23 +144,13 @@ export function CartProvider({ children }) {
     ...prevCart,
     cart_items: updatedCartItems,
   }));
-};
+  };
   // Updated the total value of cart when cart.cart_items change.
-  useEffect(()=>{updateCartTotal()},[cart.cart_items])
+  useEffect(()=>{updateCartTotal()},[cart.cart_items]);
 
-  useEffect(() => {
-    // Fetch cart from the API when the component mounts. If there's already an cart_id no need to fetch it again.
-    if (cart.cart_id == null) {
-      fetch(cartApiUrl)
-        .then((response) => response.json())
-        // Only update the cart_id, since in the beggining the cart is emtpy.
-        .then((data) => setCart((prevCart) => ({ ...prevCart, cart_id: data.cart_id })))
-        .catch((error) => console.error('Error fetching cart:', error));
-    }
-  }, [cart.cart_id]);
 
   return (
-    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity, decreaseCartItemQuantity, deleteItemFromCart}}>
+    <CartContext.Provider value={{cart, addItemToCart, increaseCartItemQuantity, decreaseCartItemQuantity, deleteItemFromCart, handleCheckout}}>
       {children}
     </CartContext.Provider>
   );

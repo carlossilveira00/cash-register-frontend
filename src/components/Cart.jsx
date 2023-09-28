@@ -129,9 +129,9 @@ export default function Cart() {
       <ArrowUp></ArrowUp>
       <CartItemsContainer>
         {
-          cart.cart.cart_items.map((item) => {
+          cart.cart.cart_items.map((item, index) => {
             return(
-            <CartItem>
+            <CartItem key={index}>
               <ItemImage src={item.product_image} alt={item.product_name} />
               <ItemDetails>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent:'space-between' }}>
@@ -167,8 +167,8 @@ export default function Cart() {
           <span style={{fontWeight:'800'}}>Total:</span>
           <span>{cart.cart.total}$</span>
         </TotalValue>
-        <CheckoutButton>Checkout</CheckoutButton>
+        <CheckoutButton onClick={() => cart.handleCheckout()}>Checkout</CheckoutButton>
       </CartItemsContainer>
     </CartContainer>
   );
-}
+};

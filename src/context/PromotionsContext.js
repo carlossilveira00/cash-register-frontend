@@ -2,13 +2,13 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 
 const PromotionsContext = createContext();
 
-export function usePromotons() {
+export function usePromotions() {
   return useContext(PromotionsContext)
 };
 
 export function PromotionsProvider({ children }) {
   const [promotions, setPromotions] = useState([]);
-  const promotionsApiUrl = 'https://65143ced8e505cebc2eb025b.mockapi.io/promotions';
+  const promotionsApiUrl = 'http://127.0.0.1:3000/promotions';
 
   const findApplicablePromotion = (cartItem) => {
     const promotionToBeApplied = promotions.find((promotion) => promotion.product_code === cartItem.product_code);
@@ -16,6 +16,10 @@ export function PromotionsProvider({ children }) {
   };
 
   function parseFraction(fraction) {
+    // Fraction is already in decimal
+    if (fraction < 1 ){
+      return fraction
+    }
     const parts = fraction.split('/');
     if (parts.length === 2) {
       // In case the discount is a fraction (ex: 2/3) return discount in decimal.

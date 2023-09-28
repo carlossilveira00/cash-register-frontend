@@ -8,7 +8,7 @@ export function useProdcuts() {
 
 export function ProductsProvider({ children }) {
   const [products, setProducts] = useState([]);
-  const productsApiUrl = 'https://65143ced8e505cebc2eb025b.mockapi.io/products';
+  const productsApiUrl = 'http://127.0.0.1:3000/products';
 
   useEffect(() => {
     // Fetch products from the API when the component mounts
