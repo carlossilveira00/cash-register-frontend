@@ -21,7 +21,7 @@ export function CartProvider({ children }) {
 
     setCart((prevCart) => ({
       ...prevCart,
-      total: updatedTotal
+      total: updatedTotal.toFixed(2)
     }));
   };
 
@@ -127,7 +127,7 @@ export function CartProvider({ children }) {
     cart_items: updatedCartItems,
   }));
 };
-
+  // Updated the total value of cart when cart.cart_items change.
   useEffect(()=>{updateCartTotal()},[cart.cart_items])
 
   useEffect(() => {

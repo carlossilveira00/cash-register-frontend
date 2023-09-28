@@ -40,8 +40,8 @@ export function PromotionsProvider({ children }) {
       item.free_quantity = timesPromotionCanBeApplied * promotion.promotion_free_quantity
       return({
         ...item,
-        undiscounted_price: (item.quantity + item.free_quantity) * item.product_price,
-        discounted_price: item.quantity * item.product_price,
+        undiscounted_price: ((item.quantity + item.free_quantity) * item.product_price).toFixed(2),
+        discounted_price: (item.quantity * item.product_price).toFixed(2),
         promotion_id: promotion.id,
         promotion_status: 'applied'
       })
@@ -49,7 +49,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2)
       }
     }
   };
@@ -59,8 +59,8 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price,
-        discounted_price : item.quantity * promotion.discount,
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2),
+        discounted_price : (item.quantity * promotion.discount).toFixed(2),
         promotion_id: promotion.id,
         promotion_status: 'applied'
       }
@@ -68,7 +68,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2)
       }
     }
   };
@@ -80,7 +80,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price,
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2),
         discounted_price : (item.quantity * item.product_price * discount).toFixed(2),
         promotion_id: promotion.id,
         promotion_status: 'applied'
@@ -89,7 +89,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2)
       }
     }
   };
@@ -112,7 +112,7 @@ export function PromotionsProvider({ children }) {
       item.free_quantity = 0
       return({
         ...item,
-        undiscounted_price: (item.quantity + item.free_quantity) * item.product_price,
+        undiscounted_price: ((item.quantity + item.free_quantity) * item.product_price).toFixed(2),
         discounted_price: 0,
         promotion_id: null,
         promotion_status: 'not applied'
@@ -128,7 +128,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price,
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2),
         discounted_price : null,
         promotion_id: null,
         promotion_status: 'not applied'
@@ -143,7 +143,7 @@ export function PromotionsProvider({ children }) {
       return{
         ...item,
         cart_id: 1,
-        undiscounted_price: item.quantity * item.product_price,
+        undiscounted_price: (item.quantity * item.product_price).toFixed(2),
         discounted_price : null,
         promotion_id: null,
         promotion_status: 'not applied'
