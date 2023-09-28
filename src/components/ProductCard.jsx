@@ -81,7 +81,6 @@ const PromotionBox = styled.div`
 
 export default function ProductCard({product,promotion,cart}) {
   const [quantity, setQuantity] = useState(1);
-  console.log(product)
 
   const increaseQuantity = () => {
     setQuantity(quantity + 1);
@@ -114,8 +113,15 @@ export default function ProductCard({product,promotion,cart}) {
             <span style={{margin: '0px 5px'}} data-testid='ProductQuantity'>{quantity}</span>
           <QuantityButton onClick={increaseQuantity} data-testid='IncreaseButton'>+</QuantityButton>
         </QuantityControl>
-        <AddToCartButton onClick={() => cart.addItemToCart({product, quantity, promotion})} >Add to Cart</AddToCartButton>
+        <AddToCartButton
+          onClick={() => {
+            cart.addItemToCart({ product, quantity, promotion });
+            setQuantity(1); // Reset quantity to 1
+          }}
+        >
+          Add to Cart
+        </AddToCartButton>
       </ProductInfo>
     </ProductCardContainer>
   )
-}
+};
