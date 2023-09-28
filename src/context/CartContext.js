@@ -29,7 +29,20 @@ export function CartProvider({ children }) {
       }
     }
     return null; // Invalid fraction or float
-  }
+  };
+
+  const applyPromotions = (item) => {
+    const promotion = promotions.findApplicablePromotion(item);
+    if (promotion.promotion_type === "buy_x_get_x_free") {
+      return applyBuyXGetXFree(item, promotion);
+
+    } else if (promotion.promotion_type === "price_discount_per_quantity"){
+      return applyPriceDiscountPerQuantity(item, promotion);
+
+    } else if (promotion.promotion_type === "percentage_discount_per_quantity") {
+      return applyPercentageDiscountPerQuantity(item, promotion)
+    }
+  };
 
   const applyBuyXGetXFree = (item, promotion) => {
     if (item.quantity >= promotion.min_quantity) {
@@ -92,29 +105,16 @@ export function CartProvider({ children }) {
   };
 
   const addItemToCart = (cartItem) => {
+    // Checks to see if the item is already in cart.
     if (cart.cart_items.filter((item) => item.product_id === cartItem.product.id).length >= 1) {
       const updatedCartItems = cart.cart_items.map((item) => {
-        // If its the correct item.
-        const promotion = promotions.findApplicablePromotion(item);
-
-        if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "buy_x_get_x_free") {
-          // Update item quantity
+        // If its the item you want to updated change quantity and apply promotions.
+        if (item.product_id === cartItem.product.id) {
           item.quantity = cartItem.quantity + item.quantity;
 
-          return applyBuyXGetXFree(item, promotion);
-
-        } else if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "price_discount_per_quantity"){
-          // Update item quantity
-          item.quantity = cartItem.quantity + item.quantity;
-
-          return applyPriceDiscountPerQuantity(item, promotion);
-
-        } else if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "percentage_discount_per_quantity") {
-          // Update item quantity
-          item.quantity = cartItem.quantity + item.quantity;
-
-          return applyPercentageDiscountPerQuantity(item, promotion)
+          return applyPromotions(item)
         }
+
         // If its not the correct item then keep it unchanged.
         return item;
       });
@@ -124,9 +124,8 @@ export function CartProvider({ children }) {
         ...prevCart,
         cart_items: updatedCartItems,
       }));
-      console.log(cart)
     } else {
-      // If there's no cartItem with the produc_id you're adding, create a new Cart Item.
+      // If there's no cartItem with the product_id you're adding, you create a new Cart Item.
       const newCartItems = [...cart.cart_items, {
             cart_id: cart.cart_id,
             product_id: cartItem.product.id,
