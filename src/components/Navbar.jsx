@@ -5,6 +5,7 @@ import Cart from './Cart'
 import { useCart } from '../context/CartContext';
 
 const StyledNavbar = styled.div`
+  z-index:3;
   display: grid;
   grid-template-columns: repeat(12, 1fr); /* 12 columns in total */
   box-sizing: border-box;
