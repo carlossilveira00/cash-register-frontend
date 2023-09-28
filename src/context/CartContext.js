@@ -33,7 +33,7 @@ export function CartProvider({ children }) {
 
   const applyBuyXGetXFree = (item, promotion) => {
     if (item.quantity >= promotion.min_quantity) {
-      const timesPromotionCanBeApplied = item.quantity / promotion.min_quantity;
+      const timesPromotionCanBeApplied = Math.floor(item.quantity / promotion.min_quantity);
       item.free_quantity = timesPromotionCanBeApplied * promotion.promotion_free_quantity
       return({
         ...item,
@@ -196,26 +196,91 @@ export function CartProvider({ children }) {
     }));
   };
 
+  const unapplyBuyXGetXFree = (item, promotion) => {
+    if (item.quantity < promotion.min_quantity) {
+      item.free_quantity = 0
+      return({
+        ...item,
+        undiscounted_price: (item.quantity + item.free_quantity) * item.product_price,
+        discounted_price: 0,
+        promotion_id: null,
+        promotion_status: 'not applied'
+      })
+    } else {
+      // If there's still enough quantity to the promotion be applied, update the item in accordance with the promotion.
+      return applyBuyXGetXFree(item, promotion);
+    }
+  };
+
+  const unapplyPriceDiscountPerQuantity = (item, promotion) => {
+    if (item.quantity < promotion.min_quantity) {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price,
+        discounted_price : null,
+        promotion_id: null,
+        promotion_status: 'not applied'
+      }
+    } else {
+      return applyPriceDiscountPerQuantity(item, promotion);
+    }
+  };
+
+  const unapplyPercentageDiscountPerQuantity = (item, promotion) => {
+    if (item.quantity < promotion.min_quantity) {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price,
+        discounted_price : null,
+        promotion_id: null,
+        promotion_status: 'not applied'
+      }
+    } else {
+      return applyPercentageDiscountPerQuantity(item, promotion);
+    }
+  };
+
   const decreaseCartItemQuantity = (cartItem) => {
     const updatedCartItems = cart.cart_items.map((item) => {
       // If its the correct item.
       if (item.product_id === cartItem.product_id) {
-        // Decrease the quantity of the matching item by 1.
-        const updatedQuantity = item.quantity - 1
-        // If the quantity is equal to 0 return null
-        if (updatedQuantity === 0) {
-          return null
-        }
+        // Find promotion applicable to item.
+        const promotion = promotions.findApplicablePromotion(item);
 
-        return {
-          ...item,
-          quantity: updatedQuantity,
-          undiscounted_price: (cartItem.product_price * updatedQuantity)
-        };
-      }
+        if (item.product_code === promotion.product_code && promotion.promotion_type === "buy_x_get_x_free") {
+          // Decrease item quantity by 1.
+          item.quantity = item.quantity - 1;
+
+          // If the quantity is 0 then return null so this item can be deleted from the cart.
+          if (item.quantity === 0) {
+            return null
+          };
+
+          // If the quantity is bigger then 0 return unapplyBuyXGetXFree, this will check the quantity and update the cart item in accordance.
+          return unapplyBuyXGetXFree(item, promotion);
+
+        } else if (item.product_code === promotion.product_code && promotion.promotion_type === "price_discount_per_quantity"){
+          // Decrease item quantity by 1.
+          item.quantity = item.quantity - 1;
+
+          // If the quantity is 0 then return null so this item can be deleted from the cart.
+          if (item.quantity === 0) {
+            return null
+          };
+
+          return unapplyPriceDiscountPerQuantity(item, promotion);
+
+        } else if (item.product_code === promotion.product_code && promotion.promotion_type === "percentage_discount_per_quantity") {
+          // Decrease item quantity by 1.
+          item.quantity = item.quantity - 1;
+
+          return unapplyPercentageDiscountPerQuantity(item, promotion)
+        }
+      };
       // If its not the correct item then keep it unchanged.
       return item;
-      // Filter by Boolean values, this way the item you returned null will be left out of the cart_items
     }).filter(Boolean);
 
   // Update the cart state.
