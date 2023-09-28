@@ -12,6 +12,19 @@ export function CartProvider({ children }) {
   const promotions = usePromotons();
   const cartApiUrl = 'https://carts1.free.beeceptor.com/carts';
 
+  const updateCartTotal = () => {
+    const updatedTotal = cart.cart_items.reduce((total,cart_item)=>{
+      const itemCost = cart_item.discounted_price || cart_item.undiscounted_price
+
+      return total + (itemCost * 1)
+    }, 0);
+
+    setCart((prevCart) => ({
+      ...prevCart,
+      total: updatedTotal
+    }));
+  };
+
   const addItemToCart = (cartItem) => {
     // Checks to see if the item is already in cart.
     if (cart.cart_items.filter((item) => item.product_id === cartItem.product.id).length >= 1) {
@@ -57,6 +70,7 @@ export function CartProvider({ children }) {
         cart_items: updatedCartItems,
       }));
     };
+    updateCartTotal();
   };
 
   const increaseCartItemQuantity = (cartItem) => {
@@ -113,6 +127,8 @@ export function CartProvider({ children }) {
     cart_items: updatedCartItems,
   }));
 };
+
+  useEffect(()=>{updateCartTotal()},[cart.cart_items])
 
   useEffect(() => {
     // Fetch cart from the API when the component mounts. If there's already an cart_id no need to fetch it again.

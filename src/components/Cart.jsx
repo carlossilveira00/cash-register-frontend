@@ -165,7 +165,7 @@ export default function Cart() {
         }
         <TotalValue>
           <span style={{fontWeight:'800'}}>Total:</span>
-          <span>{cart.total}$</span>
+          <span>{cart.cart.total}$</span>
         </TotalValue>
         <CheckoutButton>Checkout</CheckoutButton>
       </CartItemsContainer>
