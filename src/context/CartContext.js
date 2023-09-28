@@ -21,7 +21,7 @@ export function CartProvider({ children }) {
           item.quantity = cartItem.quantity + item.quantity;
 
           return promotions.applyPromotion(item);
-        }
+        };
 
         // If its not the correct item then keep it unchanged.
         return item;
@@ -33,28 +33,30 @@ export function CartProvider({ children }) {
         cart_items: updatedCartItems,
       }));
     } else {
-      // If there's no cartItem with the product_id you're adding, you create a new Cart Item.
-      const newCartItems = [...cart.cart_items, {
-            cart_id: cart.cart_id,
-            product_id: cartItem.product.id,
-            product_image: cartItem.product.image_url,
-            product_code: cartItem.product.code,
-            product_name: cartItem.product.name,
-            product_price: cartItem.product.price,
-            quantity: cartItem.quantity,
-            undiscounted_price: (cartItem.product.price * cartItem.quantity),
-            discounted_price: null,
-            free_quantity: 0,
-            promotion_id: null,
-            promotion_status: 'not applied'
-      }];
+      // Create new cartItem and
+      let newCartItem = {
+        cart_id: cart.cart_id,
+        product_id: cartItem.product.id,
+        product_image: cartItem.product.image_url,
+        product_code: cartItem.product.code,
+        product_name: cartItem.product.name,
+        product_price: cartItem.product.price,
+        quantity: cartItem.quantity,
+        undiscounted_price: (cartItem.product.price * cartItem.quantity),
+        discounted_price: null,
+        free_quantity: 0,
+        promotion_id: null,
+        promotion_status: 'not applied'
+      };
+
+      // Apply promotion if it meets the requirements and add the new cartItem to cartItems.
+      const updatedCartItems = [...cart.cart_items, promotions.applyPromotion(newCartItem)];
       // Update the Cart State.
       setCart((prevCart) => ({
         ...prevCart,
-        cart_items: newCartItems,
+        cart_items: updatedCartItems,
       }));
-
-    }
+    };
   };
 
   const increaseCartItemQuantity = (cartItem) => {

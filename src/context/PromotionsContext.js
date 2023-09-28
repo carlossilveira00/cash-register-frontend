@@ -4,7 +4,7 @@ const PromotionsContext = createContext();
 
 export function usePromotons() {
   return useContext(PromotionsContext)
-}
+};
 
 export function PromotionsProvider({ children }) {
   const [promotions, setPromotions] = useState([]);
