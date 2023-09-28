@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { usePromotons } from "./PromotionsContext";
 
 const CartContext = createContext();
 
@@ -8,19 +9,105 @@ export function useCart() {
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState({cart_id: null, total:10, cart_items:[]});
+  const promotions = usePromotons();
   const cartApiUrl = 'https://carts1.free.beeceptor.com/carts';
+
+  function parseFraction(fraction) {
+    const parts = fraction.split('/');
+    if (parts.length === 2) {
+      // In case the discount is a fraction (ex: 2/3) return discount in decimal.
+      const numerator = parseFloat(parts[0]);
+      const denominator = parseFloat(parts[1]);
+      if (!isNaN(numerator) && !isNaN(denominator) && denominator !== 0) {
+        return numerator / denominator;
+      }
+    } else {
+      // In case the discount is a float (ex: 25.00) return discount in decimal.
+      const floatVal = parseFloat(fraction);
+      if (!isNaN(floatVal)) {
+        return floatVal / 100;
+      }
+    }
+    return null; // Invalid fraction or float
+  }
+
+  const applyBuyXGetXFree = (item, promotion) => {
+    if (item.quantity >= promotion.min_quantity) {
+      const timesPromotionCanBeApplied = item.quantity / promotion.min_quantity;
+      item.free_quantity = timesPromotionCanBeApplied * promotion.promotion_free_quantity
+      return({
+        ...item,
+        undiscounted_price: (item.quantity + item.free_quantity) * item.product_price,
+        discounted_price: item.quantity * item.product_price,
+        promotion_id: promotion.id,
+        promotion_status: 'applied'
+      })
+    } else {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price
+      }
+    }
+  };
+
+  const applyPriceDiscountPerQuantity = (item, promotion) => {
+    if (item.quantity >= promotion.min_quantity) {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price,
+        discounted_price : item.quantity * promotion.discount
+      }
+    } else {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price
+      }
+    }
+  };
+
+  const applyPercentageDiscountPerQuantity = (item, promotion) => {
+    if (item.quantity >= promotion.min_quantity) {
+      const discount = parseFraction(promotion.discount)
+
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price,
+        discounted_price : (item.quantity * item.product_price * discount).toFixed(2)
+      }
+    } else {
+      return{
+        ...item,
+        cart_id: 1,
+        undiscounted_price: item.quantity * item.product_price
+      }
+    }
+  };
 
   const addItemToCart = (cartItem) => {
     if (cart.cart_items.filter((item) => item.product_id === cartItem.product.id).length >= 1) {
       const updatedCartItems = cart.cart_items.map((item) => {
         // If its the correct item.
-        if (item.product_id === cartItem.product.id) {
-          // Increment the quantity of the matching item.
-          return {
-            ...item,
-            quantity: item.quantity + cartItem.quantity,
-            undiscounted_price: (cartItem.product.price * (cartItem.quantity + item.quantity))
-          };
+        const promotion = promotions.findApplicablePromotion(item);
+
+
+        if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "buy_x_get_x_free") {
+          item.quantity = cartItem.quantity + item.quantity;
+
+          return applyBuyXGetXFree(item, promotion);
+
+        } else if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "price_discount_per_quantity"){
+          item.quantity = cartItem.quantity + item.quantity;
+
+          return applyPriceDiscountPerQuantity(item, promotion);
+
+        } else if (item.product_id === cartItem.product.id && item.product_code === promotion.product_code && promotion.promotion_type === "percentage_discount_per_quantity") {
+          item.quantity = cartItem.quantity + item.quantity;
+
+          return applyPercentageDiscountPerQuantity(item, promotion)
         }
         // If its not the correct item then keep it unchanged.
         return item;
@@ -31,12 +118,14 @@ export function CartProvider({ children }) {
         ...prevCart,
         cart_items: updatedCartItems,
       }));
+      console.log(cart)
     } else {
       // Create a new Cart Item.
       const newCartItems = [...cart.cart_items, {
             cart_id: cart.cart_id,
             product_id: cartItem.product.id,
             product_image: cartItem.product.image_url,
+            product_code: cartItem.product.code,
             product_name: cartItem.product.name,
             product_price: cartItem.product.price,
             quantity: cartItem.quantity,
@@ -44,7 +133,7 @@ export function CartProvider({ children }) {
             discounted_price: null,
             free_quantity: 0,
             promotion_id: null,
-            promotions_status: 'not applied'
+            promotion_status: 'not applied'
       }];
       // Update the Cart State.
       setCart((prevCart) => ({
@@ -76,6 +165,7 @@ export function CartProvider({ children }) {
       ...prevCart,
       cart_items: updatedCartItems,
     }));
+    promotions.applyPromotionRules()
   };
 
   const deleteItemFromCart = (cartItem) => {

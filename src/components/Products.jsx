@@ -132,7 +132,7 @@ export default function Products() {
         {
           products.map((product) => {
             // Find if there's any promotion for this product
-            let promotion = promotions.find((promo) => promo.product_code === product.code)
+            let promotion = promotions.promotions.find((promo) => promo.product_code === product.code)
 
             return(
               <ProductCard data-testid='ProductCard'>

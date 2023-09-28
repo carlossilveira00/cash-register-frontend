@@ -7,16 +7,16 @@ import { PromotionsProvider } from './context/PromotionsContext';
 
 function App() {
   return (
-    <CartProvider>
-      <PromotionsProvider>
-        <ProductsProvider>
-          <div>
-            <Navbar></Navbar>
-            <Products></Products>
-          </div>
-        </ProductsProvider>
-      </PromotionsProvider>
-    </CartProvider>
+    <PromotionsProvider>
+      <CartProvider>
+      <ProductsProvider>
+        <div>
+          <Navbar></Navbar>
+          <Products></Products>
+        </div>
+      </ProductsProvider>
+      </CartProvider>
+    </PromotionsProvider>
   );
 }
 
