@@ -35,8 +35,8 @@ export default function Products() {
   const promotions = usePromotions();
 
   return (
-    <ProductsWrapper data-testid='ProductsWrapper'>
-      <ProductsTitle data-testid='Title'>Products</ProductsTitle>
+    <ProductsWrapper>
+      <ProductsTitle>Products</ProductsTitle>
       <ProductsContainer>
         {
           products.map((product) => {

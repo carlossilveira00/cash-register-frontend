@@ -93,7 +93,7 @@ export default function ProductCard({product,promotion,cart}) {
   };
 
   return (
-    <ProductCardContainer data-testid='ProductCard'>
+    <ProductCardContainer>
       {
         // If there is a promotion then pass the promotion details and create a promotion box on this product.
         promotion &&
@@ -102,16 +102,16 @@ export default function ProductCard({product,promotion,cart}) {
             <span style={{fontWeight:'600'}}>{promotion.title}</span>
         </PromotionBox>
       }
-      <ProductImage data-testid='ProductImage' src={product.image_url} alt="Product" />
+      <ProductImage src={product.image_url} alt="Product" />
       <ProductInfo>
-        <h4 data-testid='ProductTitle'>{product.name}</h4>
-        <p data-testid='ProductCode'>Product Code: {product.code}</p>
-        <ProductPrice data-testid='ProductPrice'>{product.price}$</ProductPrice>
+        <h4>{product.name}</h4>
+        <p>Product Code: {product.code}</p>
+        <ProductPrice>{product.price}$</ProductPrice>
         <QuantityControl>
           <QuantityLabel>Quantity:</QuantityLabel>
-          <QuantityButton onClick={decreaseQuantity} data-testid='DecreaseButton'>-</QuantityButton>
-            <span style={{margin: '0px 5px'}} data-testid='ProductQuantity'>{quantity}</span>
-          <QuantityButton onClick={increaseQuantity} data-testid='IncreaseButton'>+</QuantityButton>
+          <QuantityButton onClick={decreaseQuantity}>-</QuantityButton>
+            <span style={{margin: '0px 5px'}}>{quantity}</span>
+          <QuantityButton onClick={increaseQuantity}>+</QuantityButton>
         </QuantityControl>
         <AddToCartButton
           onClick={() => {

@@ -48,12 +48,12 @@ export default function Navbar() {
   };
 
   return (
-    <StyledNavbar data-testid="Navbar">
+    <StyledNavbar>
       <LogoContainer>
-        <Logo src='https://amenitiz.com/wp-content/uploads/2022/09/WORDMARK-AMENITIZ-BLUE-1.svg' data-testid="Logo"></Logo>
+        <Logo src='https://amenitiz.com/wp-content/uploads/2022/09/WORDMARK-AMENITIZ-BLUE-1.svg'></Logo>
       </LogoContainer>
-      <CartIcon data-testid='CartIcon' onClick={toggleCart}>
-        <CartImage src={Cart_Icon} alt="Cart" data-testid='CartImage'></CartImage>
+      <CartIcon onClick={toggleCart}>
+        <CartImage src={Cart_Icon} alt="Cart"></CartImage>
         {isCartOpen && <Cart cart={cart}/>}
       </CartIcon>
     </StyledNavbar>

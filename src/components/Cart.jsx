@@ -125,7 +125,7 @@ export default function Cart() {
   const cart = useCart();
 
   return (
-    <CartContainer data-testid='Cart' onClick={(e) => e.stopPropagation()}>
+    <CartContainer onClick={(e) => e.stopPropagation()}>
       <ArrowUp></ArrowUp>
       <CartItemsContainer>
         {
