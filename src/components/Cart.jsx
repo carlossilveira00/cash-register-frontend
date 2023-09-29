@@ -81,10 +81,9 @@ const QuantityControl = styled.div`
 `;
 
 const QuantityButton = styled.button`
-  background-color: #E0E0E0; /* Light gray background */
-  color: #333333; /* Dark gray text color */
+  background-color: #E0E0E0;
+  color: #333333;
   border: none;
-  /* padding: 5px 10px; */
   border-radius: 4px;
   cursor: pointer;
   margin: 0 5px;
